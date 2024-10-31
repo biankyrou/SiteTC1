@@ -6,7 +6,7 @@
 
 .register-container{
   padding: 10px 20px;
-  border: 3px solid black;
+  border: 2px solid black;
   border-radius: 5px;
   margin-top: 20px;
 }
@@ -17,15 +17,14 @@
   font-family: monospace;
 }
 
-.register-input{
+/* .register-input{
   display: block;
   padding: 7px 0;
   margin: 10px auto;
-}
+} */
 
 .register-button{
-  padding: 2px 5px;
-  margin: 13px;
+  margin: 20px 0px 10px 0px;
 }
 
 .followers-container{
@@ -42,4 +41,16 @@
 .delete-button{
   padding: 0px 5px;
   margin-left: 10px;
+}
+
+.input-group input {
+  width: calc(100% - 10px);
+}
+
+.input-group p {
+  font-weight: bold;
+}
+
+.radio-group p{
+  font-weight: bold;
 }
