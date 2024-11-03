@@ -1,28 +1,38 @@
 import React, { useState, useEffect } from "react";
 import './App.css';
 import axios from 'axios';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
 
-function Register() {
+
+function Register({ selectedFollower, onSave }) {
   const [values, setValues] = useState({});
-  const [editingId, setEditingId] = useState(null);
+  const navigate = useNavigate();
 
-  const handleChangeValues = (value) => {
+  useEffect(() => {
+    if (selectedFollower) {
+      setValues(selectedFollower);
+    } else {
+      setValues({});
+    }
+  }, [selectedFollower]);
+
+  const handleChangeValues = (event) => {
     setValues((prevValue) => ({
       ...prevValue,
-      [value.target.name]: value.target.value,
+      [event.target.name]: event.target.value,
     }));
   };
 
   const handleClickButton = () => {
-    const request = editingId 
-      ? axios.put(`http://localhost:3001/followers/${editingId}`, values)
+    const request = selectedFollower
+      ? axios.put(`http://localhost:3001/followers/${selectedFollower.id}`, values)
       : axios.post('http://localhost:3001/followers', values);
-    
+
     request.then(() => {
-      console.log(editingId ? "Follower atualizado:" : "Follower inserido:", values);
-      setEditingId(null);
-      setValues({});
+      console.log(selectedFollower ? "Follower atualizado:" : "Follower inserido:", values);
+      onSave(); 
+      setValues({}); 
+      navigate('/followers'); 
     }).catch((error) => console.error("Erro ao salvar follower:", error));
   };
 
@@ -41,7 +51,7 @@ function Register() {
       </div>
 
       <div className="input-group">
-        <p>Nivel de devoção:</p>
+        <p>Nível de devoção:</p>
         <input type="number" name="nivel" placeholder="Nível de Devoção" className="register-input" value={values.nivel || ''} onChange={handleChangeValues} />
       </div>
 
@@ -54,14 +64,15 @@ function Register() {
       </div>
 
       <button className="register-button" onClick={handleClickButton}>
-        {editingId ? "Atualizar Seguidor" : "Participar do Culto"}
+        {selectedFollower ? "Atualizar Seguidor" : "Participar do Culto"}
       </button>
     </div>
   );
 }
 
-function FollowersList() {
+function FollowersList({ onEdit }) {
   const [followers, setFollowers] = useState([]);
+  const navigate = useNavigate(); 
 
   const getFollowers = () => {
     axios.get('http://localhost:3001/followers')
@@ -74,14 +85,15 @@ function FollowersList() {
   }, []);
 
   const handleEdit = (follower) => {
-    // Implementar lógica de edição se necessário
+    onEdit(follower); 
+    navigate('/'); 
   };
 
   const handleDelete = (id) => {
     axios.delete(`http://localhost:3001/followers/${id}`)
       .then(() => {
         console.log("Follower excluído:", id);
-        getFollowers();
+        getFollowers(); 
       })
       .catch((error) => console.error("Erro ao excluir follower:", error));
   };
@@ -105,13 +117,24 @@ function FollowersList() {
   );
 }
 
+
 function App() {
+  const [selectedFollower, setSelectedFollower] = useState(null);
+
+  const handleEditFollower = (follower) => {
+    setSelectedFollower(follower); 
+  };
+
+  const handleSaveFollower = () => {
+    setSelectedFollower(null); 
+  };
+
   return (
     <Router>
       <div className="app-container">
         <Routes>
-          <Route path="/" element={<Register />} />
-          <Route path="/followers" element={<FollowersList />} />
+          <Route path="/" element={<Register selectedFollower={selectedFollower} onSave={handleSaveFollower} />} />
+          <Route path="/followers" element={<FollowersList onEdit={handleEditFollower} />} />
         </Routes>
         <nav className="nav-container">
           <Link to="/">Página Principal</Link> | <Link to="/followers">Lista de Seguidores</Link>
