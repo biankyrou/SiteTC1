@@ -1,3 +1,18 @@
 {
-  "followers": []
+  "followers": [
+    {
+      "id": "1",
+      "name": "f",
+      "gender": "fds",
+      "occupation": "fds",
+      "nivel": "fds"
+    },
+    {
+      "id": "2",
+      "name": "Bianca",
+      "gender": "masc",
+      "occupation": "Coletar",
+      "nivel": "1000"
+    }
+  ]
 }

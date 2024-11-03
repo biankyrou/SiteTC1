@@ -54,3 +54,13 @@
 .radio-group p{
   font-weight: bold;
 }
+
+.nav-container {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
