@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react
 function Register({ selectedFollower, onSave }) {
   const [values, setValues] = useState({});
   const navigate = useNavigate();
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (selectedFollower) {
@@ -27,18 +28,26 @@ function Register({ selectedFollower, onSave }) {
     const request = selectedFollower
       ? axios.put(`http://localhost:3001/followers/${selectedFollower.id}`, values)
       : axios.post('http://localhost:3001/followers', values);
-
+  
     request.then(() => {
-      console.log(selectedFollower ? "Follower atualizado:" : "Follower inserido:", values);
+      setMessage(selectedFollower ? "Seguidor atualizado com sucesso!" : "Seguidor inserido com sucesso!"); 
       onSave(); 
       setValues({}); 
       navigate('/followers'); 
-    }).catch((error) => console.error("Erro ao salvar follower:", error));
+    }).catch((error) => {
+      setMessage("Erro ao salvar seguidor."); 
+      console.error("Erro ao salvar follower:", error);
+    });
   };
+
+  
 
   return (
     <div className="register-container">
       <h1 className="register-title">Lamb Followers</h1>
+
+      {/* Exibe a mensagem para o usuário */}
+      {message && <p>{message}</p>}
 
       <div className="input-group">
         <p>Nome:</p>
@@ -73,6 +82,7 @@ function Register({ selectedFollower, onSave }) {
 function FollowersList({ onEdit }) {
   const [followers, setFollowers] = useState([]);
   const navigate = useNavigate(); 
+  const [message, setMessage] = useState('');
 
   const getFollowers = () => {
     axios.get('http://localhost:3001/followers')
@@ -92,15 +102,23 @@ function FollowersList({ onEdit }) {
   const handleDelete = (id) => {
     axios.delete(`http://localhost:3001/followers/${id}`)
       .then(() => {
-        console.log("Follower excluído:", id);
+        setMessage("Seguidor excluído com sucesso!"); 
         getFollowers(); 
       })
-      .catch((error) => console.error("Erro ao excluir follower:", error));
+      .catch((error) => {
+        setMessage("Erro ao excluir seguidor."); 
+        console.error("Erro ao excluir follower:", error);
+      });
   };
-
+  
+  
   return (
     <div className="followers-container">
       <h2>Lista de Seguidores:</h2>
+
+      {/* Exibe a mensagem para o usuário */}
+      {message && <p>{message}</p>}
+
       <ul>
         {followers.map((follower) => (
           <li key={follower.id}>
@@ -114,6 +132,7 @@ function FollowersList({ onEdit }) {
         ))}
       </ul>
     </div>
+    
   );
 }
 
