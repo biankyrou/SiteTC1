@@ -8,6 +8,8 @@ function Register({ selectedFollower, onSave }) {
   const [values, setValues] = useState({});
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     if (selectedFollower) {
@@ -17,6 +19,14 @@ function Register({ selectedFollower, onSave }) {
     }
   }, [selectedFollower]);
 
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => setMessage(''), 3000); 
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+  
+
   const handleChangeValues = (event) => {
     setValues((prevValue) => ({
       ...prevValue,
@@ -25,29 +35,32 @@ function Register({ selectedFollower, onSave }) {
   };
 
   const handleClickButton = () => {
+    setLoading(true);
     const request = selectedFollower
       ? axios.put(`http://localhost:3001/followers/${selectedFollower.id}`, values)
       : axios.post('http://localhost:3001/followers', values);
   
     request.then(() => {
-      setMessage(selectedFollower ? "Seguidor atualizado com sucesso!" : "Seguidor inserido com sucesso!"); 
-      onSave(); 
-      setValues({}); 
-      navigate('/followers'); 
+      setMessage(selectedFollower ? "Seguidor atualizado com sucesso!" : "Seguidor inserido com sucesso!");
+      onSave();
+      setValues({});
+      navigate('/followers');
     }).catch((error) => {
-      setMessage("Erro ao salvar seguidor."); 
+      setMessage("Erro ao salvar seguidor.");
       console.error("Erro ao salvar follower:", error);
+    }).finally(() => {
+      setLoading(false); 
     });
   };
-
   
 
   return (
     <div className="register-container">
       <h1 className="register-title">Lamb Followers</h1>
 
-      {/* Exibe a mensagem para o usuário */}
-      {message && <p>{message}</p>}
+      {message && <div role="alert">{message}</div>}
+      {loading && <div className="spinner">Loading...</div>}
+
 
       <div className="input-group">
         <p>Nome:</p>
