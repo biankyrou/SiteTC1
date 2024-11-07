@@ -57,12 +57,13 @@ function Register({ selectedFollower, onSave }) {
 
   return (
     <div className="register-container">
-      <h1 className="register-title">Lamb Followers</h1>
+      <h1 className="register-title">Join the Cult</h1>
 
       {message && <div role="alert">{message}</div>}
       {loading && <div className="spinner">Loading...</div>}
 
 
+      
       <div className="input-group">
         <p>Nome:</p>
         <input type="text" name="name" placeholder="Digite o nome do seguidor" className="register-input" value={values.name || ''} onChange={handleChangeValues} />
