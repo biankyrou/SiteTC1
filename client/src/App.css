@@ -3,7 +3,7 @@ body{
   margin: 0;
   padding: 0;
   color: #f5f5f5;
-  background-image: url('C:\Users\Poly\Desktop\SiteTC1\client\public\img\lamb3.jpg');
+  background-image: url('/public/img/lamb3.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed; 
