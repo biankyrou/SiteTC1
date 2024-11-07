@@ -1,3 +1,25 @@
 {
-  "followers": []
+  "followers": [
+    {
+      "id": "3",
+      "name": "dsa",
+      "gender": "dsa",
+      "occupation": "Construir",
+      "nivel": "100044444"
+    },
+    {
+      "id": "4",
+      "name": "dsa",
+      "gender": "323",
+      "occupation": "Construir",
+      "nivel": "1000"
+    },
+    {
+      "id": "5",
+      "name": "fdff",
+      "gender": "fds",
+      "occupation": "Construir",
+      "nivel": "32"
+    }
+  ]
 }

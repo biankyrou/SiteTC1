@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import './App.css';
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
+import Card from './components/Card/index.js'
 
 
 function Register({ selectedFollower, onSave }) {
@@ -107,7 +108,7 @@ function FollowersList({ onEdit }) {
     getFollowers();
   }, []);
 
-  const handleEdit = (follower) => {
+const handleEdit = (follower) => {
     onEdit(follower); 
     navigate('/'); 
   };
@@ -123,6 +124,8 @@ function FollowersList({ onEdit }) {
         console.error("Erro ao excluir follower:", error);
       });
   };
+
+  
   
   
   return (
@@ -132,7 +135,7 @@ function FollowersList({ onEdit }) {
       {/* Exibe a mensagem para o usuário */}
       {message && <p>{message}</p>}
 
-      <ul>
+      {/* <ul>
         {followers.map((follower) => (
           <li key={follower.id}>
             <strong>Nome:</strong> {follower.name} |
@@ -143,9 +146,18 @@ function FollowersList({ onEdit }) {
             <button className="delete-button" onClick={() => handleDelete(follower.id)}>Excluir</button>
           </li>
         ))}
-      </ul>
+      </ul> */}
+
+      <div className="followers-list">
+        {followers.map((follower) => (
+          <div key={follower.id}>
+            <Card follower={follower} onSchedule={() => handleEdit(follower)} />
+            <button className="edit-button" onClick={() => handleEdit(follower)}>Editar</button>
+            <button className="delete-button" onClick={() => handleDelete(follower.id)}>Excluir</button>
+          </div>
+        ))}
+      </div>
     </div>
-    
   );
 }
 
@@ -166,7 +178,10 @@ function App() {
       <div className="app-container">
         <Routes>
           <Route path="/" element={<Register selectedFollower={selectedFollower} onSave={handleSaveFollower} />} />
-          <Route path="/followers" element={<FollowersList onEdit={handleEditFollower} />} />
+          <Route path="/followers" 
+          element={<FollowersList 
+          onEdit={handleEditFollower} />} />
+
         </Routes>
         <nav className="nav-container">
           <Link to="/">Página Principal</Link> | <Link to="/followers">Lista de Seguidores</Link>
