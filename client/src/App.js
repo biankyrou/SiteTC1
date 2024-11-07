@@ -3,13 +3,58 @@ import './App.css';
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import Card from './components/Card/index.js'
+import Slider from 'react-slick';
 
+
+const ImageSlider = ({ images, onSelectImage }) => {
+  return (
+    <Slider
+      dots={true}           // Adiciona as bolinhas para navegação
+      infinite={true}       // Permite rotação infinita
+      speed={500}           // Velocidade da transição entre as imagens
+      slidesToShow={3}      // Exibe 3 imagens por vez
+      slidesToScroll={1}    // Avança uma imagem por vez
+      centerMode={true}     // Exibe a imagem centralizada
+      focusOnSelect={true}  // Foca na imagem ao clicar
+      className="image-slider"
+    >
+      {images.map((image, index) => (
+        <div key={index} className="slider-item">
+          <img
+            src={image}
+            alt={`Follower ${index}`}
+            onClick={() => onSelectImage(image)}
+            className="slider-image"
+          />
+        </div>
+      ))}
+    </Slider>
+  );
+};
 
 function Register({ selectedFollower, onSave }) {
   const [values, setValues] = useState({});
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const images = [
+    '/img/Hippo_form.webp',  
+    '/img/Bison_form.webp',
+    '/img/Capybara_form_3.webp',
+    '/img/Frog_form.webp',
+    '/img/Fox_form.webp',
+    '/img/Elephant_form_2.webp',
+    '/img/Cat_form_2.webp',
+    '/img/Fennecfox_form_2.png',
+    '/img/Starfish_form_2.webp',
+    '/img/Nightwolf_form_2.webp',
+    '/img/Twitchcat_form_2.webp',
+    '/img/Tapir_form_2.webp',
+    '/img/Redpanda_form.webp',
+    '/img/Turtle_form.webp',
+
+  ];
 
 
   useEffect(() => {
@@ -54,6 +99,9 @@ function Register({ selectedFollower, onSave }) {
     });
   };
   
+  const handleSelectImage = (image) => {
+    setSelectedImage(image);
+  };
 
   return (
     <div className="register-container">
@@ -66,17 +114,17 @@ function Register({ selectedFollower, onSave }) {
       
       <div className="input-group">
         <p>Nome:</p>
-        <input type="text" name="name" placeholder="Digite o nome do seguidor" className="register-input" value={values.name || ''} onChange={handleChangeValues} />
+        <input type="text" name="name" placeholder="Um nome misterioso ou peculiar para o seguidor." className="register-input" value={values.name || ''} onChange={handleChangeValues} />
       </div>
 
       <div className="input-group">
         <p>Gênero:</p>
-        <input type="text" name="gender" placeholder="Digite o gênero do seguidor" className="register-input" value={values.gender || ''} onChange={handleChangeValues} />
+        <input type="text" name="gender" placeholder="Pode ser 'Masculino', 'Feminino', ou até algo místico como 'Inominado'." className="register-input" value={values.gender || ''} onChange={handleChangeValues} />
       </div>
 
       <div className="input-group">
         <p>Nível de devoção:</p>
-        <input type="number" name="nivel" placeholder="Nível de Devoção" className="register-input" value={values.nivel || ''} onChange={handleChangeValues} />
+        <input type="number" name="nivel" placeholder="Representa o quanto o seguidor é dedicado ao culto." className="register-input" value={values.nivel || ''} onChange={handleChangeValues} />
       </div>
 
       <div className="radio-group">
@@ -87,9 +135,23 @@ function Register({ selectedFollower, onSave }) {
         <label><input type="radio" name="occupation" value="Orar" checked={values.occupation === "Orar"} onChange={handleChangeValues} /> Orar</label>
       </div>
 
-      <button className="register-button" onClick={handleClickButton}>
-        {selectedFollower ? "Atualizar Seguidor" : "Participar do Culto"}
-      </button>
+      <label>Escolha uma Forma de Seguidor:</label>
+      <ImageSlider images={images} onSelectImage={handleSelectImage} />
+
+      <p>Forma Selecionada:</p>
+      <div className="register-form">
+        {selectedImage && (
+          <img
+            src={selectedImage}
+            alt="Imagem Selecionada"
+            className="selected-image"
+          />
+        )}
+
+        <button className="register-button" onClick={handleClickButton}>
+          {selectedFollower ? "Atualizar Seguidor" : "Participar do Culto"}
+        </button>
+      </div>
     </div>
   );
 }
